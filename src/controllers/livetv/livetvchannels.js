@@ -12,13 +12,14 @@ export default function (view, params, tabContent) {
             pageData = {
                 query: {
                     StartIndex: 0,
-                    Fields: 'PrimaryImageAspectRatio'
+                    Fields: 'PrimaryImageAspectRatio',
+                    groupName: '全部'
                 }
             };
         }
 
         if (userSettings.libraryPageSize() > 0) {
-            pageData.query['Limit'] = userSettings.libraryPageSize();
+            pageData.query['Limit'] = 2000; //userSettings.libraryPageSize();
         }
 
         return pageData;
@@ -28,7 +29,21 @@ export default function (view, params, tabContent) {
         return getPageData().query;
     }
 
-    function getChannelsHtml(channels) {
+    function getChannelsHtml(channels, query) {
+        console.log(query.groupName);
+
+        channels = channels.filter(e => {
+            let groupName = query.groupName;
+            if (groupName == '全部') {
+                return true;
+            }
+
+            if (groupName == '未分类') {
+                groupName = null;
+            }
+            return e.ChannelGroup == groupName;
+        });
+
         return cardBuilder.getCardsHtml({
             items: channels,
             shape: 'square',
@@ -39,6 +54,32 @@ export default function (view, params, tabContent) {
             showCurrentProgram: true,
             showCurrentProgramTime: true
         });
+    }
+
+    function getGroupHtml(channels) {
+        // const fmt = `<div id="upcomingKids" class="verticalSection">
+        //         <div class="sectionTitleContainer sectionTitleContainer-cards padded-left">
+        //             <a href="#/list.html?type=Programs&IsKids=true" is="emby-linkbutton" class="button-flat button-flat-mini sectionTitleTextButton sectionTitleTextButton-programs">
+        //                 <h2 class="sectionTitle sectionTitle-cards" style="display: inline-block; vertical-align: middle;">${HeaderForKids}</h2>
+        //                 <span class="material-icons chevron_right" aria-hidden="true"></span>
+        //             </a>
+        //         </div>
+        //         <div is="emby-itemscontainer" class="upcomingKidsItems itemsContainer padded-left padded-right"></div>
+        //     </div>`;
+        let html = '';
+        for (const chan of channels) {
+            const groupName = chan;
+
+            html += `<div class="verticalSection">
+                <div class="sectionTitleContainer sectionTitleContainer-cards padded-left">
+                    <a style="cursor:pointer" class="group-button button-flat button-flat-mini sectionTitleTextButton sectionTitleTextButton-programs">
+                        <h2 class="sectionTitle sectionTitle-cards" style="display: inline-block; vertical-align: middle;">${groupName}</h2>
+                    </a>
+                </div>
+            </div>`;
+        }
+
+        return html;
     }
 
     function renderChannels(context, result) {
@@ -68,20 +109,51 @@ export default function (view, params, tabContent) {
             });
         }
 
-        const query = getQuery();
+        function onGroupButton(e) {
+            if (isLoading) {
+                return;
+            }
 
-        for (const elem of context.querySelectorAll('.paging')) {
-            elem.innerHTML = libraryBrowser.getQueryPagingHtml({
-                startIndex: query.StartIndex,
-                limit: query.Limit,
-                totalRecordCount: result.TotalRecordCount,
-                showLimit: false,
-                updatePageSizeSetting: false,
-                filterButton: false
+            if (userSettings.libraryPageSize() > 0) {
+                query.StartIndex = Math.max(0, query.StartIndex - query.Limit);
+            }
+
+            const groupName = e.target.innerHTML;
+            query.groupName = groupName;
+
+            reloadItems(context).then(() => {
+                window.scrollTo(0, 0);
             });
         }
 
-        const html = getChannelsHtml(result.Items);
+        const query = getQuery();
+
+        // for (const elem of context.querySelectorAll('.paging')) {
+        //     elem.innerHTML = libraryBrowser.getQueryPagingHtml({
+        //         startIndex: query.StartIndex,
+        //         limit: query.Limit,
+        //         totalRecordCount: result.TotalRecordCount,
+        //         showLimit: false,
+        //         updatePageSizeSetting: false,
+        //         filterButton: false
+        //     });
+        // }
+
+        //group
+        const groups = new Set(['全部']);
+        for (const item of result.Items) {
+            if (item.ChannelGroup) {
+                groups.add(item.ChannelGroup);
+            }
+        }
+        groups.add('未分类');
+
+        const group_html = getGroupHtml(groups);
+        const group_elem = context.querySelector('#group');
+        group_elem.innerHTML = group_html;
+        imageLoader.lazyChildren(group_elem);
+
+        const html = getChannelsHtml(result.Items, query);
         const elem = context.querySelector('#items');
         elem.innerHTML = html;
         imageLoader.lazyChildren(elem);
@@ -95,6 +167,10 @@ export default function (view, params, tabContent) {
 
         for (elems = context.querySelectorAll('.btnPreviousPage'), i = 0, length = elems.length; i < length; i++) {
             elems[i].addEventListener('click', onPreviousPageClick);
+        }
+
+        for (elems = context.querySelectorAll('.group-button'), i = 0, length = elems.length; i < length; i++) {
+            elems[i].addEventListener('click', onGroupButton);
         }
     }
 
