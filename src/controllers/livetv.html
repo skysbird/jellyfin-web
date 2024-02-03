@@ -58,15 +58,22 @@
         </div>
         <div class="pageTabContent flexPageTabContent absolutePageTabContent" id="guideTab" data-index="1" style="width:auto;padding-top:0; padding-bottom: 0!important;">
         </div>
-        <div class="pageTabContent" id="channelsTab" data-index="2">
-            <div class="flex align-items-center justify-content-center flex-wrap-wrap padded-top padded-left padded-right padded-bottom focuscontainer-x">
-                <div class="paging"></div>
-                <button is="paper-icon-button-light" class="btnFilter sectionTitleButton" title="${Filter}"><span class="material-icons filter_list" aria-hidden="true"></span></button>
+        <div class="pageTabContent" id="channelsTab" data-index="2" style="display: flex;">
+            <div style="display: table-cell;" id="group">
+
             </div>
-            <div is="emby-itemscontainer" id="items" class="itemsContainer vertical-wrap padded-left padded-right"></div>
-            <div class="flex align-items-center justify-content-center flex-wrap-wrap padded-top padded-left padded-right padded-bottom focuscontainer-x">
-                <div class="paging"></div>
+            <div style="display: table-cell;width: 100%;height: 100%;">
+                <div class="flex align-items-center justify-content-center flex-wrap-wrap padded-top padded-left padded-right padded-bottom focuscontainer-x">
+                    <div class="paging"></div>
+                    <button is="paper-icon-button-light" class="btnFilter sectionTitleButton" title="${Filter}"><span class="material-icons filter_list" aria-hidden="true"></span></button>
+                </div>
+
+                <div is="emby-itemscontainer" id="items" class="itemsContainer vertical-wrap padded-left padded-right verticalSection"></div>
+                <div class="flex align-items-center justify-content-center flex-wrap-wrap padded-top padded-left padded-right padded-bottom focuscontainer-x">
+                    <div class="paging"></div>
+                </div>
             </div>
+
         </div>
         <div class="pageTabContent" id="recordingsTab" data-index="3">
             <div id="latestRecordings" class="verticalSection hide">
