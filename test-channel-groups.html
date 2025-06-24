@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Channel Groups Test</title>
+    <style>
+        .channelGroup {
+            margin-bottom: 2em;
+            border: 1px solid #ccc;
+            padding: 1em;
+        }
+        
+        .channelGroupTitle {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 1em;
+            color: #333;
+            border-left: 3px solid #007acc;
+            padding-left: 0.5em;
+        }
+        
+        .channelGroupContent {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5em;
+        }
+        
+        .channelCard {
+            width: 120px;
+            height: 80px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f5f5f5;
+            cursor: pointer;
+        }
+        
+        .channelCard:hover {
+            background: #e0e0e0;
+        }
+        
+        .toggleButton {
+            padding: 8px 16px;
+            background: #007acc;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 10px;
+        }
+        
+        .toggleButton:hover {
+            background: #005a9e;
+        }
+        
+        .toggleButton.active {
+            background: #28a745;
+        }
+    </style>
+</head>
+<body>
+    <h1>频道组功能测试</h1>
+    
+    <button class="toggleButton" onclick="toggleDisplay()">
+        切换到频道组显示
+    </button>
+    
+    <div id="content">
+        <!-- 内容将在这里动态加载 -->
+    </div>
+    
+    <script>
+        // 模拟频道组数据
+        const channelGroupsData = [
+            {
+                Name: "新闻频道",
+                TotalCount: 5,
+                Channels: [
+                    { Id: "1", Name: "CCTV-1", Type: "TvChannel" },
+                    { Id: "2", Name: "CCTV-新闻", Type: "TvChannel" },
+                    { Id: "3", Name: "凤凰卫视", Type: "TvChannel" },
+                    { Id: "4", Name: "CNN", Type: "TvChannel" },
+                    { Id: "5", Name: "BBC News", Type: "TvChannel" }
+                ]
+            },
+            {
+                Name: "娱乐频道",
+                TotalCount: 4,
+                Channels: [
+                    { Id: "6", Name: "CCTV-3", Type: "TvChannel" },
+                    { Id: "7", Name: "湖南卫视", Type: "TvChannel" },
+                    { Id: "8", Name: "浙江卫视", Type: "TvChannel" },
+                    { Id: "9", Name: "江苏卫视", Type: "TvChannel" }
+                ]
+            },
+            {
+                Name: "体育频道",
+                TotalCount: 3,
+                Channels: [
+                    { Id: "10", Name: "CCTV-5", Type: "TvChannel" },
+                    { Id: "11", Name: "CCTV-5+", Type: "TvChannel" },
+                    { Id: "12", Name: "ESPN", Type: "TvChannel" }
+                ]
+            }
+        ];
+        
+        // 模拟传统频道列表数据
+        const channelsData = {
+            Items: [
+                { Id: "1", Name: "CCTV-1", Type: "TvChannel" },
+                { Id: "2", Name: "CCTV-新闻", Type: "TvChannel" },
+                { Id: "3", Name: "凤凰卫视", Type: "TvChannel" },
+                { Id: "4", Name: "CNN", Type: "TvChannel" },
+                { Id: "5", Name: "BBC News", Type: "TvChannel" },
+                { Id: "6", Name: "CCTV-3", Type: "TvChannel" },
+                { Id: "7", Name: "湖南卫视", Type: "TvChannel" },
+                { Id: "8", Name: "浙江卫视", Type: "TvChannel" },
+                { Id: "9", Name: "江苏卫视", Type: "TvChannel" },
+                { Id: "10", Name: "CCTV-5", Type: "TvChannel" },
+                { Id: "11", Name: "CCTV-5+", Type: "TvChannel" },
+                { Id: "12", Name: "ESPN", Type: "TvChannel" }
+            ],
+            TotalRecordCount: 12
+        };
+        
+        let useChannelGroups = false;
+        
+        function renderChannelGroups() {
+            const content = document.getElementById('content');
+            let html = '';
+            
+            channelGroupsData.forEach(group => {
+                html += '<div class="channelGroup">';
+                html += '<h3 class="channelGroupTitle">' + group.Name + ' (' + group.TotalCount + ')</h3>';
+                html += '<div class="channelGroupContent">';
+                
+                group.Channels.forEach(channel => {
+                    html += '<div class="channelCard" onclick="playChannel(\'' + channel.Id + '\')">';
+                    html += channel.Name;
+                    html += '</div>';
+                });
+                
+                html += '</div>';
+                html += '</div>';
+            });
+            
+            content.innerHTML = html;
+        }
+        
+        function renderChannels() {
+            const content = document.getElementById('content');
+            let html = '<div class="channelGroupContent">';
+            
+            channelsData.Items.forEach(channel => {
+                html += '<div class="channelCard" onclick="playChannel(\'' + channel.Id + '\')">';
+                html += channel.Name;
+                html += '</div>';
+            });
+            
+            html += '</div>';
+            content.innerHTML = html;
+        }
+        
+        function toggleDisplay() {
+            useChannelGroups = !useChannelGroups;
+            const button = document.querySelector('.toggleButton');
+            
+            if (useChannelGroups) {
+                button.textContent = '切换到频道列表显示';
+                button.classList.add('active');
+                renderChannelGroups();
+            } else {
+                button.textContent = '切换到频道组显示';
+                button.classList.remove('active');
+                renderChannels();
+            }
+        }
+        
+        function playChannel(channelId) {
+            alert('播放频道: ' + channelId);
+        }
+        
+        // 初始显示
+        renderChannels();
+    </script>
+</body>
+</html> 

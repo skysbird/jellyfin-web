@@ -1,0 +1,67 @@
+.channelGroup {
+    margin-bottom: 2em;
+    
+    .channelGroupTitle {
+        font-size: 1.2em;
+        font-weight: 500;
+        margin-bottom: 1em;
+        padding-left: 0.5em;
+        color: var(--theme-text-color);
+        border-left: 3px solid var(--theme-accent-color);
+    }
+    
+    .channelGroupContent {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5em;
+        
+        .card {
+            flex: 0 0 auto;
+        }
+    }
+}
+
+// 切换按钮样式
+.btnToggleGroups-wrapper {
+    margin-left: 0.5em;
+    
+    .btnToggleGroups {
+        &.active {
+            background-color: var(--theme-accent-color);
+            color: var(--theme-accent-foreground-color);
+        }
+    }
+}
+
+// 响应式设计
+@media (max-width: 768px) {
+    .channelGroup {
+        .channelGroupContent {
+            gap: 0.25em;
+        }
+    }
+    
+    .btnToggleGroups-wrapper {
+        margin-left: 0.25em;
+    }
+}
+
+// 深色主题适配
+.theme-dark {
+    .channelGroup {
+        .channelGroupTitle {
+            color: var(--theme-text-color);
+            border-left-color: var(--theme-accent-color);
+        }
+    }
+}
+
+// 浅色主题适配
+.theme-light {
+    .channelGroup {
+        .channelGroupTitle {
+            color: var(--theme-text-color);
+            border-left-color: var(--theme-accent-color);
+        }
+    }
+} 
