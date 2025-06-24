@@ -12,3 +12,88 @@
 #channelsTab .cardImageContainer {
     background-size: contain;
 }
+
+// 频道组样式
+.channelGroup {
+    margin-bottom: 2em;
+    padding: 1em;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 0.5em;
+}
+
+.channelGroupTitle {
+    margin: 0 0 1em 0;
+    padding: 0.5em 0;
+    font-size: 1.2em;
+    font-weight: 600;
+    color: var(--theme-primary-color);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.channelGroupContent {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5em;
+    margin-bottom: 0;
+    justify-content: flex-start;
+    position: relative;
+    min-height: 120px; /* 保证有空间显示分页 */
+}
+
+// 切换按钮样式
+.btnToggleGroups {
+    &.active {
+        background-color: var(--theme-primary-color);
+        color: var(--theme-primary-foreground-color);
+    }
+}
+
+.btnToggleGroups-wrapper {
+    margin-left: 0.5em;
+}
+
+.groupPaging {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 1.5em;
+    margin: 0.5em 0 0 0;
+    position: relative;
+    bottom: 0;
+    right: 0;
+}
+
+@media (max-width: 900px) {
+    .groupPaging {
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 0.5em;
+    }
+}
+
+.groupPaging button {
+    padding: 0.5em 1.2em;
+    border: none;
+    border-radius: 2em;
+    background: var(--theme-primary-color, #2196f3);
+    color: var(--theme-primary-foreground-color, #fff);
+    font-size: 1em;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.groupPaging button:disabled {
+    background: #bbb;
+    color: #fff;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.groupPaging span {
+    font-size: 1.1em;
+    color: var(--theme-text-color, #fff);
+    min-width: 80px;
+    text-align: center;
+    letter-spacing: 1px;
+}

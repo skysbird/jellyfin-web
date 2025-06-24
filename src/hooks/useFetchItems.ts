@@ -285,20 +285,36 @@ const fetchGetItemsViewByType = async (
                 );
                 break;
             case LibraryTab.Channels: {
-                response = await getLiveTvApi(api).getLiveTvChannels(
-                    {
-                        userId: user.Id,
-                        fields: [ItemFields.PrimaryImageAspectRatio],
-                        startIndex: libraryViewSettings.StartIndex,
-                        isFavorite: libraryViewSettings.Filters?.Status?.includes(ItemFilter.IsFavorite) ?
-                            true :
-                            undefined,
-                        enableImageTypes: [ImageType.Primary]
-                    },
-                    {
+                // 检查是否使用频道组显示
+                const useChannelGroups = libraryViewSettings.Filters?.DisplayMode?.includes('groups');
+                
+                if (useChannelGroups) {
+                    // 使用频道组接口
+                    response = await api.axiosInstance.get('/LiveTv/Channels/Groups', {
+                        params: {
+                            userId: user.Id,
+                            startIndex: libraryViewSettings.StartIndex,
+                            limit: libraryViewSettings.Limit || 50
+                        },
                         signal: options?.signal
-                    }
-                );
+                    });
+                } else {
+                    // 使用传统频道接口
+                    response = await getLiveTvApi(api).getLiveTvChannels(
+                        {
+                            userId: user.Id,
+                            fields: [ItemFields.PrimaryImageAspectRatio],
+                            startIndex: libraryViewSettings.StartIndex,
+                            isFavorite: libraryViewSettings.Filters?.Status?.includes(ItemFilter.IsFavorite) ?
+                                true :
+                                undefined,
+                            enableImageTypes: [ImageType.Primary]
+                        },
+                        {
+                            signal: options?.signal
+                        }
+                    );
+                }
                 break;
             }
             case LibraryTab.SeriesTimers:

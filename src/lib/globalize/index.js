@@ -237,8 +237,16 @@ function translateKeyFromModule(key, module) {
 
 export function translate(key) {
     let val = translateKey(key);
+    if (typeof val !== 'string') {
+        val = key; // 兜底
+    }
     for (let i = 1; i < arguments.length; i++) {
-        val = val.replaceAll('{' + (i - 1) + '}', arguments[i].toLocaleString(currentCulture));
+        const arg = arguments[i];
+        // 只对对象和数字调用 toLocaleString，否则直接用字符串
+        let argStr = (arg !== undefined && arg !== null && (typeof arg === 'number' || typeof arg === 'object'))
+            ? (arg.toLocaleString ? arg.toLocaleString(currentCulture) : String(arg))
+            : String(arg);
+        val = val.replaceAll('{' + (i - 1) + '}', argStr);
     }
     return val;
 }

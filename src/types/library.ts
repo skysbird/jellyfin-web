@@ -45,6 +45,7 @@ export interface Filters {
     VideoBasicFilter?: VideoBasicFilter[];
     VideoTypes?: VideoType[];
     Years?: number[];
+    DisplayMode?: string[];
 }
 
 export enum ViewMode {
@@ -63,4 +64,5 @@ export interface LibraryViewSettings {
     ShowYear?: boolean;
     Filters?: Filters;
     Alphabet?: string | null;
+    Limit?: number;
 }
